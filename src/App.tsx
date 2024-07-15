@@ -1,33 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { useForm, useFieldArray, Controller} from 'react-hook-form'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    trigger,
+    setError,
+    watch,
+    formState: { errors },
+  } = useForm({})
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'property'
+  })
+  const onSubmit = (data: object) => console.log(data);
+
+  console.log((watch('property')));
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <form onSubmit={handleSubmit(onSubmit)} className='form-todo'>
+        <h2>Lista de tareas</h2>
+
+        <div className='input-container'>
+          <ul>
+            {
+              fields.map((item, index) => (
+                <li key={item.id}>
+                  <input type="text" {...register(`property.${index}.key`)} />
+                <Controller 
+                  render={({ field }) => <input {...field} />}
+                  name={`property.${index}.value`}
+                  control={control}
+                />
+                <button type='button' onClick={()=> remove(index)}>Eliminar Propiedad</button>
+                </li>
+              ))
+            }
+          </ul>
+          <button 
+            type='button' 
+            onClick={() => append({ key: 'myKey', value: 'myValue'})} 
+            className='button-sendProperty'
+          >Añadir propiedad</button>
+        </div>
+      </form>
     </>
   )
 }

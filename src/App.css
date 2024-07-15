@@ -40,3 +40,19 @@
 .read-the-docs {
   color: #888;
 }
+
+.input-error {
+  color: red;
+}
+
+.input {
+  display: block;
+}
+
+.input-container {
+  display: grid;
+}
+
+.button-sendProperty {
+  background-color: cadetblue;
+}
